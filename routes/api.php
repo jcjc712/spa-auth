@@ -16,8 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+/*SignUp*/
+Route::post('/user/signup', 'Auth\RegisterController@signup');
 Route::post('/user/activation', 'Auth\RegisterController@activateUser');//->name('user.activate');
+/*LogOut*/
+Route::middleware('auth:api')->post('/user/logout', 'Auth\LogoutController@logoutDevice');
+/*ChangePass*/
+Route::middleware('auth:api')->post('/user/update-account', 'Auth\AccountController@changeData');
 
-Route::post('/user', 'Auth\RegisterController@signup');
+
+/*Reset password*/
 Route::post('/password/email', 'Auth\ForgotPasswordController@getResetToken');
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset');

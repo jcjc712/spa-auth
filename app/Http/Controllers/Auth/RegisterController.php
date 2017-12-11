@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Traits\PassportToken;
 use App\Transformers\Json;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -25,7 +27,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-
+    use PassportToken;
     /**
      * Where to redirect users after registration.
      *
@@ -95,11 +97,13 @@ class RegisterController extends Controller
 
     public function activateUser(Request $request)
     {
+        $this->validate($request,[
+            'token' => 'required|min:3',
+        ]);
         $token = $request->input('token');
         if ($user = $this->activationService->activateUser($token)) {
-            //auth()->login($user);
-            /*TODO token de loguin passport*/
-            return response()->json(Json::response(null, 'success'));
+            $tokenData =  $this->getBearerTokenByUser($user, 1, false);
+            return response()->json(Json::response($tokenData, 'success'));
         }
         abort(404);
     }
