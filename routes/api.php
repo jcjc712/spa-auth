@@ -23,8 +23,6 @@ Route::post('/user/activation', 'Auth\RegisterController@activateUser');//->name
 Route::middleware('auth:api')->post('/user/logout', 'Auth\LogoutController@logoutDevice');
 /*ChangePass*/
 Route::middleware('auth:api')->post('/user/update-account', 'Auth\AccountController@changeData');
-
-
 /*Reset password*/
 Route::post('/password/email', 'Auth\ForgotPasswordController@getResetToken');
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
